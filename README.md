@@ -1,12 +1,14 @@
 # Hello Pandas + Pyomo examples
 
-This is a minimum example that demonstrates how Pandas and Pyomo (< version 4) are combined to yield a mathematical optimisation model.
+This is a minimum example that demonstrates how Pandas and Pyomo (both version 3.5 [within Coopr] and version 4) are combined to yield a mathematical optimisation model.
 
 The example is a [Minimum-cost flow problem](https://en.wikipedia.org/wiki/Minimum-cost_flow_problem) formulation of the task to find the [Bacon number](https://en.wikipedia.org/wiki/Six_Degrees_of_Kevin_Bacon#Bacon_numbers) of a given actor/actress within the given [social graph](https://en.wikipedia.org/wiki/Social_graph) of Hollywood actors.
 
 ## What is it about?
 
-Technically, the example shows how to convert the conceptually simpler, self-contained `bacon.mod` (GNU MathProg problem, including dat) into a more complex triplet of input data (`input.xlsx`), model formulation and helper functions (`bacon.py`) and a run script (`runme.py`).
+Technically, the example shows how to convert the conceptually simpler, self-contained `bacon.mod` (GNU MathProg problem) into a more complex triplet of input data (`input.xlsx`), model formulation and helper functions (`bacon.py`) and a run script (`runme.py`).
+
+While for this example, the scaffolding code seems unnecessarily complex, it scales much better to larger (i.e. more variables, more constraints) models like [urbs](https://www.github.com/tum-ens/urbs). 
 
 
 ## Requirements
