@@ -11,9 +11,9 @@ Technically, the example shows how to convert the conceptually simpler, self-con
 
 ## Requirements
 
- - Python 2.7 ([Anaconda](https://www.continuum.io/downloads))
+ - Python 2.7 or 3.5 ([Anaconda](https://www.continuum.io/downloads))
  - Pandas (included in Anaconda)
- - Coopr 3.5.8787: `pip install coopr=3.5.8787`
+ - **Either (old)**: Coopr 3.5.8787 (`pip install coopr=3.5.8787`) or (**new**) Pyomo 4 (`pip install pyomo`)
  - GLPK
 
  
