@@ -13,7 +13,7 @@ Technically, the example shows how to convert the conceptually simpler, self-con
 
  - Python 2.7 or 3.5 ([Anaconda](https://www.continuum.io/downloads))
  - Pandas (included in Anaconda)
- - **Either (old)**: Coopr 3.5.8787 (`pip install coopr=3.5.8787`) or (**new**) Pyomo 4 (`pip install pyomo`)
+ - **Either (old)**: Coopr 3.5.8787 (`pip install coopr=3.5.8787`) **or (new)** Pyomo 4 (`pip install pyomo`)
  - GLPK
 
  
@@ -32,7 +32,7 @@ Technically, the example shows how to convert the conceptually simpler, self-con
 
     python runme.py
     
-For a better learning experience, one can also launch ipython and execute the lines of runme.py manually:
+For a better learning experience, one can also launch `ipython` and execute the lines of `runme.py` step by step, inspecting the created objects with one eye on the [Pyomo Online Documentation](https://software.sandia.gov/downloads/pub/pyomo/PyomoOnlineDocs.html):
 
     import coopr.environ
     from coopr.opt.base import SolverFactory
