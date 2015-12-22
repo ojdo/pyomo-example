@@ -1,10 +1,20 @@
-# Example for Python 2.7 with Coopr.Pyomo (i.e. Pyomo before version 4)
-# 
-import coopr.pyomo as pyomo
+try:
+    # Example for Python 2.7 with Coopr 3.5.8787
+    import coopr.pyomo as pyomo
+except ImportError:
+    # Pyomo 4
+    import pyomo.environ as pyomo
 import pandas as pd
 
-
 def read_excel(filename):
+    """Read special Excel spreadsheet to input dict. 
+    
+    Args:
+        filename: path to a spreadsheet file
+        
+    Returns
+        dict of DataFrames, to be passed to create_model()
+    """
     with pd.ExcelFile(filename) as xls:
         actor = xls.parse('Actor').set_index('Name')
         film = xls.parse('Film').set_index('Title')
@@ -19,42 +29,25 @@ def read_excel(filename):
 
 
 def create_model(data):
+    """Create Pyomo ConcreteModel
+    """
     m = pyomo.ConcreteModel()
     m.name = 'BACON'
-    
-    # allow referencing the input DataFrames from within the model object.
-    # Technical reason: within the constraint rule functions, one then could
-    # simply access the attribute values using `m.actor.loc[name, 'age']`
-    # http://pandas.pydata.org/pandas-docs/stable/10min.html#selection-by-label
     m.data = data
     
     # pre-processing
-    # (actually, this should be moved to a dedicated function and then only be
-    # called from here. But, I'm lazy..)
-    
-    social_network = []  # list of (actor, actor) pairs together in a film
-    for film, group in m.data['actor-film'].reset_index().groupby('Film'):
-        all_actors = group['Actor'].unique()
+    social_network = get_social_network(m.data['actor-film']) 
         
-        for a1, a2 in pd.MultiIndex.from_product([all_actors, all_actors]):
-            if a1 != a2:  # only  include distinct
-                social_network.append((a1, a2))
-    
-    # GAMS-like stuff ahead
-    # (actually, this could/should might be better be split as well once it
-    # gets to length of an urbs-style model)
-    
     # SETS
     # elementary sets, e.g.
     #    actor = {'Actor A', 'Actor B', 'Actor C'}
     #    film = {'Film 1', 'Film 2', 'Film 3', 'Film 4'}
-    #
-    # Nothing interesting here, just copying the index
-    # labels (i.e. actor names and film titles) into pyomo Set objects
     m.actor = pyomo.Set(initialize=m.data['actor'].index.unique())
     m.film = pyomo.Set(initialize=m.data['film'].index.unique())
     
-    # tuple sets
+    # tuple sets, e.g.
+    #   plays_in = {('Actor A', 'Film 2'), ...}
+    #   plays_with = {('Actor A', 'Actor B'), ...}
     m.plays_in = pyomo.Set(within=m.actor * m.film,
                            initialize=m.data['actor-film'].index)
 
@@ -63,8 +56,8 @@ def create_model(data):
 
     # PARAMS
     # not needed in this way of doing things. Instead, one can simply use the
-    # DataFrames directly within the constraint function without having copied
-    # around the values
+    # DataFrames directly within the constraint function. See fc_rule and 
+    # how it accesses the `sink-source` column from input.xlsx.
     
     # VARIABLES
     m.flow = pyomo.Var(m.actor, m.actor,  # domain (actor1, actor2)
@@ -81,13 +74,14 @@ def create_model(data):
     
     return m
 
-# the rule functions must be placed outside the create_model function, so that
-# pickling (storing) the whole model works automagically works
 
-# OBJECTIVE RULE FUNCTION
+# OBJECTIVE
 def obj_rule(m):
     return pyomo.summation(m.flow)  # == short for sum{a1,a2} flow[a1,a2]
-    
+
+
+
+# CONSTRAINTS
 def fc_rule(m, a):  # a == actor (from the `forall a in m.actor` line above)
     flow_balance = 0
     for (a1, a2) in m.plays_with:
@@ -100,3 +94,17 @@ def fc_rule(m, a):  # a == actor (from the `forall a in m.actor` line above)
     flow_balance += m.data['actor'].loc[a, 'sink-source']
     
     return flow_balance == 0
+
+
+
+
+# HELPER FUNCTIONS
+def get_social_network(actor_film_table):
+    social_network = []  # list of (actor, actor) pairs together in a film
+    for film, group in actor_film_table.reset_index().groupby('Film'):
+        all_actors = group['Actor'].unique()
+        
+        for a1, a2 in pd.MultiIndex.from_product([all_actors, all_actors]):
+            if a1 != a2:  # only  include distinct
+                social_network.append((a1, a2))
+    return social_network

@@ -1,5 +1,12 @@
-import coopr.environ
-from coopr.opt.base import SolverFactory
+try:
+    # Coopr 3.5.8787 (old)
+    import coopr.environ
+    from coopr.opt.base import SolverFactory
+except ImportError:
+    # Pyomo 4 (new)
+    import pyomo.environ
+    from pyomo.opt import SolverFactory
+
 import bacon
 
 input_filename = 'input.xlsx'

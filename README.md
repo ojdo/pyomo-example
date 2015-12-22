@@ -14,7 +14,39 @@ Technically, the example shows how to convert the conceptually simpler, self-con
  - Python 2.7 ([Anaconda](https://www.continuum.io/downloads))
  - Pandas (included in Anaconda)
  - Coopr 3.5.8787: `pip install coopr=3.5.8787`
+ - GLPK
+
  
+## How to run
+
+### Setup
+
+    git clone https://github.com/ojdo/pyomo-3-example.git
+    cd pyomo-3-example
+
+### MathProg example (`bacon.mod`)
+
+    glpsol -m bacon.mod
+    
+### Pyomo example (everything else in the folder)
+
+    python runme.py
+    
+For a better learning experience, one can also launch ipython and execute the lines of runme.py manually:
+
+    import coopr.environ
+    from coopr.opt.base import SolverFactory
+    import bacon
+    
+    data = bacon.read_excel('input.xlsx')
+    model = bacon.create_model(data)
+    prob = model.create()
+    optim = SolverFactory('glpk')
+    result = optim.solve(prob, tee=True)
+    prob.load(result)
+
+All the work happens in the functions defined within `bacon.py`.
+    
 
 ## Copyright
 
