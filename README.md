@@ -15,6 +15,7 @@ While for this example, the scaffolding code seems unnecessarily complex, it sca
 
  - Python 2.7 or 3.5 ([Anaconda](https://www.continuum.io/downloads))
  - Pandas (included in Anaconda)
+ - xlrd (included in Anaconda)
  - **Either (old)**: Coopr 3.5.8787 (`pip install coopr=3.5.8787`) **or (new)** Pyomo 4 (`pip install pyomo`)
  - GLPK
 
