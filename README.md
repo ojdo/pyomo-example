@@ -24,8 +24,8 @@ While for this example, the scaffolding code seems unnecessarily complex, it sca
 
 ### Setup
 
-    git clone https://github.com/ojdo/pyomo-3-example.git
-    cd pyomo-3-example
+    git clone https://github.com/ojdo/pyomo-example.git
+    cd pyomo-example
 
 ### MathProg example (`bacon.mod`)
 
