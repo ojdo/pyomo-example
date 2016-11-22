@@ -37,16 +37,18 @@ While for this example, the scaffolding code seems unnecessarily complex, it sca
     
 For a better learning experience, one can also launch `ipython` and execute the lines of `runme.py` step by step, inspecting the created objects with one eye on the [Pyomo Online Documentation](https://software.sandia.gov/downloads/pub/pyomo/PyomoOnlineDocs.html):
 
-    import coopr.environ
-    from coopr.opt.base import SolverFactory
-    import bacon
-    
-    data = bacon.read_excel('input.xlsx')
-    model = bacon.create_model(data)
-    prob = model.create()
-    optim = SolverFactory('glpk')
-    result = optim.solve(prob, tee=True)
-    prob.load(result)
+```python
+import coopr.environ
+from coopr.opt.base import SolverFactory
+import bacon
+
+data = bacon.read_excel('input.xlsx')
+model = bacon.create_model(data)
+prob = model.create()
+optim = SolverFactory('glpk')
+result = optim.solve(prob, tee=True)
+prob.load(result)
+```
 
 All the work happens in the functions defined within `bacon.py`.
     
